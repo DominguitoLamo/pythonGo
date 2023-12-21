@@ -1,22 +1,32 @@
 package code
 
 import (
+	"fmt"
+
 	"chonlam.com/pythonGo/pyType"
 )
 
 type CodeObject struct {
-	consts []pyType.HiObject;
-	names []pyType.HiObject;
-	varNames []pyType.HiObject;
-	freeVars []pyType.HiObject;
-	cellVars []pyType.HiObject;
-	fileName *pyType.HiString;
-	coName *pyType.HiString;
-	lineNum int;
-	noTable *pyType.HiString;
-	argCount int;
-	nLocals int;
-	stackSize int;
-	flags int;
-	byteCodes *pyType.HiString
+	Consts []pyType.HiObject;
+	Names []pyType.HiObject;
+	VarNames []pyType.HiObject;
+	FreeVars []pyType.HiObject;
+	CellVars []pyType.HiObject;
+	FileName *pyType.HiString;
+	CoName *pyType.HiString;
+	LineNum int;
+	NoTable *pyType.HiString;
+	ArgCount int;
+	NLocals int;
+	StackSize int;
+	Flags int;
+	ByteCodes *pyType.HiString
+}
+
+func (h *CodeObject) Print() {
+	fmt.Printf("")
+}
+
+func (h *CodeObject) Add(x *pyType.HiObject) *pyType.HiObject {
+	return nil
 }

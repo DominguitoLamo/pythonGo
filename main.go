@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"chonlam.com/pythonGo/code"
+	"chonlam.com/pythonGo/runtime"
 )
 
 func main() {
@@ -14,5 +15,7 @@ func main() {
 	}
 
 	path := os.Args[1]
-	code.Parse(path)
+	codeObject := code.Parse(path)
+	interpreter := new(runtime.Interpreter)
+	interpreter.Run(codeObject)
 }

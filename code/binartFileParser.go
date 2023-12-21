@@ -38,24 +38,24 @@ func (b *BinaryFileParser) Parse() *CodeObject {
 
 func (b *BinaryFileParser) getCodeObject() *CodeObject {
 	result := new(CodeObject)
-	result.argCount = b.fileStream.ReadInt()
-	fmt.Printf("arg count is %d\n", result.argCount)
-	result.nLocals = b.fileStream.ReadInt()
-	result.stackSize = b.fileStream.ReadInt()
-	result.flags = b.fileStream.ReadInt()
-	fmt.Printf("flags is 0x%x\n", result.flags)
+	result.ArgCount = b.fileStream.ReadInt()
+	fmt.Printf("arg count is %d\n", result.ArgCount)
+	result.NLocals = b.fileStream.ReadInt()
+	result.StackSize = b.fileStream.ReadInt()
+	result.Flags = b.fileStream.ReadInt()
+	fmt.Printf("flags is 0x%x\n", result.Flags)
 
-	result.byteCodes = b.getByteCodes()
-	result.consts = b.getConsts()
-	result.names = b.getNames()
-	result.varNames = b.getVarNames()
-	result.freeVars = b.getFreeVars()
-	result.cellVars = b.getCellVars()
+	result.ByteCodes = b.getByteCodes()
+	result.Consts = b.getConsts()
+	result.Names = b.getNames()
+	result.VarNames = b.getVarNames()
+	result.FreeVars = b.getFreeVars()
+	result.CellVars = b.getCellVars()
 
-	result.fileName = b.getFileName()
-	result.coName = b.getName()
-	result.lineNum = b.fileStream.ReadInt()
-	result.noTable = b.getNoTable()
+	result.FileName = b.getFileName()
+	result.CoName = b.getName()
+	result.LineNum = b.fileStream.ReadInt()
+	result.NoTable = b.getNoTable()
 
 	return result
 }
@@ -136,15 +136,6 @@ func (b *BinaryFileParser) getFreeVars() []pyType.HiObject {
 	return nil
 }
 
-func (b *BinaryFileParser) getFreeNames() []pyType.HiObject {
-	if (string(b.fileStream.Read()) == "(") {
-		return b.getTuple()
-	}
-
-	b.fileStream.Unread()
-	return nil
-}
-
 func (b *BinaryFileParser) getCellVars() []pyType.HiObject {
 	if (string(b.fileStream.Read()) == "(") {
 		return b.getTuple()
@@ -199,8 +190,8 @@ func (b *BinaryFileParser) getTuple() []pyType.HiObject {
 	return list
 }
 
-func Parse(path string) {
+func Parse(path string) *CodeObject {
 	s := codeStream.CreateStringBuffer(path)
 	parser := CreateBinaryFileParser(s)
-	parser.Parse()
+	return parser.Parse()
 }

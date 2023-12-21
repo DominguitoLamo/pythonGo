@@ -1,3 +1,6 @@
 package pyType
 
-type HiObject any
+type HiObject interface {
+	Print();
+	Add(x *HiObject) *HiObject;
+}
