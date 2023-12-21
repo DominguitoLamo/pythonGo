@@ -1,6 +1,7 @@
 package pyType
 
 type HiInterger struct {
+	HiObject
 	value int;
 }
 

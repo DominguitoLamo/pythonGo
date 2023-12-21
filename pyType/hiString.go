@@ -1,6 +1,7 @@
 package pyType
 
 type HiString struct {
+	HiObject
 	length int;
 	value string;
 }

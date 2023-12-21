@@ -1,5 +1,3 @@
 package pyType
 
-type HiObject interface {
-
-}
+type HiObject any

@@ -2,16 +2,22 @@ package code
 
 import (
 	"fmt"
+
 	"chonlam.com/pythonGo/codeStream"
+	"chonlam.com/pythonGo/pyType"
 )
 
 type BinaryFileParser struct {
 	fileStream *codeStream.StringBuffer;
+	cur int;
+	stringTable []*pyType.HiString
 }
 
 func CreateBinaryFileParser(f *codeStream.StringBuffer) *BinaryFileParser {
 	b := new(BinaryFileParser)
 	b.fileStream = f
+	b.cur = 0
+	b.stringTable = make([]*pyType.HiString, 0)
 	return b
 }
 
@@ -24,15 +30,173 @@ func (b *BinaryFileParser) Parse() *CodeObject {
 	objectType := string(b.fileStream.Read())
 	if (objectType == "c") {
 		fmt.Printf("parse Ok!\n")
-		return getCodeObject()
+		return b.getCodeObject()
 	}
 
 	return nil
 }
 
-func getCodeObject() *CodeObject {
+func (b *BinaryFileParser) getCodeObject() *CodeObject {
 	result := new(CodeObject)
+	result.argCount = b.fileStream.ReadInt()
+	fmt.Printf("arg count is %d\n", result.argCount)
+	result.nLocals = b.fileStream.ReadInt()
+	result.stackSize = b.fileStream.ReadInt()
+	result.flags = b.fileStream.ReadInt()
+	fmt.Printf("flags is 0x%x\n", result.flags)
+
+	result.byteCodes = b.getByteCodes()
+	result.consts = b.getConsts()
+	result.names = b.getNames()
+	result.varNames = b.getVarNames()
+	result.freeVars = b.getFreeVars()
+	result.cellVars = b.getCellVars()
+
+	result.fileName = b.getFileName()
+	result.coName = b.getName()
+	result.lineNum = b.fileStream.ReadInt()
+	result.noTable = b.getNoTable()
+
 	return result
+}
+
+func (b *BinaryFileParser) getByteCodes() *pyType.HiString {
+	str := string(b.fileStream.Read())
+	if (str != "s") {
+		panic("There is no string")
+	}
+
+	return b.getString()
+}
+
+func (b *BinaryFileParser) getString() *pyType.HiString {
+	length := b.fileStream.ReadInt()
+	strValue := ""
+	for i:=0; i < length; i++ {
+		strValue += string(b.fileStream.Read())
+	}
+
+	return pyType.CreateHiString(strValue)
+}
+
+func (b *BinaryFileParser) getName() *pyType.HiString {
+	ch := string(b.fileStream.Read())
+
+	if (ch == "s") {
+		return b.getString()
+	} else if (ch == "t") {
+		str := b.getString()
+		b.stringTable = append(b.stringTable, str)
+		return str
+	} else if (ch == "R") {
+		return b.stringTable[b.fileStream.ReadInt()]
+	}
+	return nil
+}
+
+func (b *BinaryFileParser) getFileName() *pyType.HiString {
+	return b.getName()
+}
+
+func (b *BinaryFileParser) getNoTable() *pyType.HiString {
+	ch := string(b.fileStream.Read())
+
+	if (ch != "s" && ch != "t") {
+		b.fileStream.Unread()
+		return nil
+	}
+
+	return b.getString()
+}
+
+func (b *BinaryFileParser) getNames() []pyType.HiObject {
+	if (string(b.fileStream.Read()) == "(") {
+		return b.getTuple()
+	}
+
+	b.fileStream.Unread()
+	return nil
+}
+
+func (b *BinaryFileParser) getVarNames() []pyType.HiObject {
+	if (string(b.fileStream.Read()) == "(") {
+		return b.getTuple()
+	}
+
+	b.fileStream.Unread()
+	return nil
+}
+
+func (b *BinaryFileParser) getFreeVars() []pyType.HiObject {
+	if (string(b.fileStream.Read()) == "(") {
+		return b.getTuple()
+	}
+
+	b.fileStream.Unread()
+	return nil
+}
+
+func (b *BinaryFileParser) getFreeNames() []pyType.HiObject {
+	if (string(b.fileStream.Read()) == "(") {
+		return b.getTuple()
+	}
+
+	b.fileStream.Unread()
+	return nil
+}
+
+func (b *BinaryFileParser) getCellVars() []pyType.HiObject {
+	if (string(b.fileStream.Read()) == "(") {
+		return b.getTuple()
+	}
+
+	b.fileStream.Unread()
+	return nil
+}
+
+func (b *BinaryFileParser) getConsts() []pyType.HiObject {
+	if (string(b.fileStream.Read()) == "(") {
+		return b.getTuple()
+	}
+
+	b.fileStream.Unread()
+	return nil
+}
+
+func (b *BinaryFileParser) getTuple() []pyType.HiObject {
+	length := b.fileStream.ReadInt()
+
+	list := make([]pyType.HiObject, 0)
+	for i := 0; i < length; i++ {
+		objType := string(b.fileStream.Read())
+
+		switch (objType) {
+		case "c":
+			fmt.Printf("get a code object\n")
+			result := b.getCodeObject()
+			list = append(list, result)
+		case "i":
+			result := pyType.CreateInteger(b.fileStream.ReadInt())
+			list = append(list, result)
+		case "N":
+			list = append(list, nil)
+		case "t":
+			str := b.getString()
+			list = append(list, str)
+			b.stringTable = append(b.stringTable, str)
+		case "s":
+			str := b.getString()
+			list = append(list, str)
+		case "R":
+			index := b.fileStream.ReadInt()
+			str := b.stringTable[index]
+			list = append(list, str)
+		default:
+			fmt.Printf("parser, unrecognized type: %s\n", objType)
+		}
+	}
+
+	return list
 }
 
 func Parse(path string) {
