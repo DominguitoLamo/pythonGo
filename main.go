@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"chonlam.com/pythonGo/codeStream"
+	"chonlam.com/pythonGo/code"
 )
 
 func main() {
@@ -14,6 +14,5 @@ func main() {
 	}
 
 	path := os.Args[1]
-	buffer := codeStream.CreateStringBuffer(path)
-	fmt.Printf("magic number is %x\n", buffer.ReadInt())
+	code.Parse(path)
 }
