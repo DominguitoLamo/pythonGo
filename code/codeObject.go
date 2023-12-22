@@ -12,21 +12,21 @@ type CodeObject struct {
 	VarNames []pyType.HiObject;
 	FreeVars []pyType.HiObject;
 	CellVars []pyType.HiObject;
-	FileName *pyType.HiString;
-	CoName *pyType.HiString;
+	FileName pyType.HiString;
+	CoName pyType.HiString;
 	LineNum int;
-	NoTable *pyType.HiString;
+	NoTable pyType.HiString;
 	ArgCount int;
 	NLocals int;
 	StackSize int;
 	Flags int;
-	ByteCodes *pyType.HiString
+	ByteCodes pyType.HiString
 }
 
-func (h *CodeObject) Print() {
+func (h CodeObject) Print() {
 	fmt.Printf("")
 }
 
-func (h *CodeObject) Add(x *pyType.HiObject) *pyType.HiObject {
+func (h CodeObject) Add(x pyType.HiObject) pyType.HiObject {
 	return nil
 }

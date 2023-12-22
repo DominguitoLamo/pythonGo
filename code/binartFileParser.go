@@ -10,18 +10,18 @@ import (
 type BinaryFileParser struct {
 	fileStream *codeStream.StringBuffer;
 	cur int;
-	stringTable []*pyType.HiString
+	stringTable []pyType.HiString
 }
 
 func CreateBinaryFileParser(f *codeStream.StringBuffer) *BinaryFileParser {
 	b := new(BinaryFileParser)
 	b.fileStream = f
 	b.cur = 0
-	b.stringTable = make([]*pyType.HiString, 0)
+	b.stringTable = make([]pyType.HiString, 0)
 	return b
 }
 
-func (b *BinaryFileParser) Parse() *CodeObject {
+func (b *BinaryFileParser) Parse() CodeObject {
 	magicNum := b.fileStream.ReadInt()
 	fmt.Printf("magic number is %x\n", magicNum);
 	modDate := b.fileStream.ReadInt();
@@ -33,11 +33,11 @@ func (b *BinaryFileParser) Parse() *CodeObject {
 		return b.getCodeObject()
 	}
 
-	return nil
+	return CodeObject{}
 }
 
-func (b *BinaryFileParser) getCodeObject() *CodeObject {
-	result := new(CodeObject)
+func (b *BinaryFileParser) getCodeObject() CodeObject {
+	result := CodeObject{}
 	result.ArgCount = b.fileStream.ReadInt()
 	fmt.Printf("arg count is %d\n", result.ArgCount)
 	result.NLocals = b.fileStream.ReadInt()
@@ -60,7 +60,7 @@ func (b *BinaryFileParser) getCodeObject() *CodeObject {
 	return result
 }
 
-func (b *BinaryFileParser) getByteCodes() *pyType.HiString {
+func (b *BinaryFileParser) getByteCodes() pyType.HiString {
 	str := string(b.fileStream.Read())
 	if (str != "s") {
 		panic("There is no string")
@@ -69,7 +69,7 @@ func (b *BinaryFileParser) getByteCodes() *pyType.HiString {
 	return b.getString()
 }
 
-func (b *BinaryFileParser) getString() *pyType.HiString {
+func (b *BinaryFileParser) getString() pyType.HiString {
 	length := b.fileStream.ReadInt()
 	strValue := ""
 	for i:=0; i < length; i++ {
@@ -79,7 +79,7 @@ func (b *BinaryFileParser) getString() *pyType.HiString {
 	return pyType.CreateHiString(strValue)
 }
 
-func (b *BinaryFileParser) getName() *pyType.HiString {
+func (b *BinaryFileParser) getName() pyType.HiString {
 	ch := string(b.fileStream.Read())
 
 	if (ch == "s") {
@@ -91,19 +91,19 @@ func (b *BinaryFileParser) getName() *pyType.HiString {
 	} else if (ch == "R") {
 		return b.stringTable[b.fileStream.ReadInt()]
 	}
-	return nil
+	return pyType.HiString{}
 }
 
-func (b *BinaryFileParser) getFileName() *pyType.HiString {
+func (b *BinaryFileParser) getFileName() pyType.HiString {
 	return b.getName()
 }
 
-func (b *BinaryFileParser) getNoTable() *pyType.HiString {
+func (b *BinaryFileParser) getNoTable() pyType.HiString {
 	ch := string(b.fileStream.Read())
 
 	if (ch != "s" && ch != "t") {
 		b.fileStream.Unread()
-		return nil
+		return pyType.HiString{}
 	}
 
 	return b.getString()
@@ -190,7 +190,7 @@ func (b *BinaryFileParser) getTuple() []pyType.HiObject {
 	return list
 }
 
-func Parse(path string) *CodeObject {
+func Parse(path string) CodeObject {
 	s := codeStream.CreateStringBuffer(path)
 	parser := CreateBinaryFileParser(s)
 	return parser.Parse()

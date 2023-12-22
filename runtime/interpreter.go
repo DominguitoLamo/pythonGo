@@ -12,7 +12,7 @@ type Interpreter struct {
 	consts []pyType.HiObject;
 }
 
-func (inter *Interpreter) Run(codes *code.CodeObject) {
+func (inter *Interpreter) Run(codes code.CodeObject) {
 	pc := 0
 	codeLength := codes.ByteCodes.Length
 
@@ -43,7 +43,7 @@ func (inter *Interpreter) Run(codes *code.CodeObject) {
 		case code.BINARY_ADD:
 			l := inter.popStack()
 			r := inter.popStack()
-			inter.stack = append(inter.stack, *l.Add(&r))
+			inter.stack = append(inter.stack, l.Add(r))
 		case code.RETURN_VALUE:
 			inter.popStack()
 		default:

@@ -7,8 +7,8 @@ type HiString struct {
 	Value  string
 }
 
-func CreateHiString(s string) *HiString {
-	h := new(HiString)
+func CreateHiString(s string) HiString {
+	h := HiString{}
 	h.Value = s
 	h.Length = len(s)
 	return h
@@ -18,15 +18,14 @@ func (h HiString) Print() {
 	fmt.Printf("%s", h.Value)
 }
 
-func (h HiString) Add(x *HiObject) *HiObject {
-	obj := *x
-	switch v := obj.(type) {
+func (h HiString) Add(x HiObject) HiObject {
+	switch v := x.(type) {
 	case HiInterger:
 		result := HiObject(CreateHiString(fmt.Sprintf("%s%d", h.Value, v.value)))
-		return &result
+		return result
 	case HiString:
 		result := HiObject(CreateHiString(fmt.Sprintf("%s%s", h.Value, v.Value)))
-		return &result
+		return result
 	default:
 		panic("No suitable type!!")
 	}
