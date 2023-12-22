@@ -30,3 +30,81 @@ func (h HiInterger) Add(x HiObject) HiObject {
 		panic("No suitable type!!")
 	}
 }
+
+func (h HiInterger) Greater(x HiObject) HiObject {
+	switch v:= x.(type) {
+	case HiInterger:
+		if (h.value > v.value) {
+			return HiTrue()
+		} else {
+			return HiFalse()
+		}
+	default:
+		panic("This is not numeric comparison!!")
+	}
+}
+
+func (h HiInterger) Less(x HiObject) HiObject {
+	switch v:= x.(type) {
+	case HiInterger:
+		if (h.value < v.value) {
+			return HiTrue()
+		} else {
+			return HiFalse()
+		}
+	default:
+		panic("This is not numeric comparison!!")
+	}
+}
+
+func (h HiInterger) Equal(x HiObject) HiObject {
+	switch v:= x.(type) {
+	case HiInterger:
+		if (h.value == v.value) {
+			return HiTrue()
+		} else {
+			return HiFalse()
+		}
+	default:
+		panic("This is not numeric comparison!!")
+	}
+}
+
+func (h HiInterger) NotEqual(x HiObject) HiObject {
+	switch v:= x.(type) {
+	case HiInterger:
+		if (h.value != v.value) {
+			return HiTrue()
+		} else {
+			return HiFalse()
+		}
+	default:
+		panic("This is not numeric comparison!!")
+	}
+}
+
+func (h HiInterger) Ge(x HiObject) HiObject {
+	switch v:= x.(type) {
+	case HiInterger:
+		if (h.value >= v.value) {
+			return HiTrue()
+		} else {
+			return HiFalse()
+		}
+	default:
+		panic("This is not numeric comparison!!")
+	}
+}
+
+func (h HiInterger) Le(x HiObject) HiObject {
+	switch v:= x.(type) {
+	case HiInterger:
+		if (h.value <= v.value) {
+			return HiTrue()
+		} else {
+			return HiFalse()
+		}
+	default:
+		panic("This is not numeric comparison!!")
+	}
+}

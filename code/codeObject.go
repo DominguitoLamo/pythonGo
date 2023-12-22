@@ -30,3 +30,27 @@ func (h CodeObject) Print() {
 func (h CodeObject) Add(x pyType.HiObject) pyType.HiObject {
 	return nil
 }
+
+func (h CodeObject) Greater(x pyType.HiObject) pyType.HiObject {
+	return pyType.HiFalse()
+}
+
+func (h CodeObject) Less(x pyType.HiObject) pyType.HiObject {
+	return pyType.HiFalse()
+}
+
+func (h CodeObject) Equal(x pyType.HiObject) pyType.HiObject {
+	return pyType.HiFalse()
+}
+
+func (h CodeObject) NotEqual(x pyType.HiObject) pyType.HiObject {
+	return pyType.HiFalse()
+}
+
+func (h CodeObject) Ge(x pyType.HiObject) pyType.HiObject {
+	return pyType.HiFalse()
+}
+
+func (h CodeObject) Le(x pyType.HiObject) pyType.HiObject {
+	return pyType.HiFalse()
+}
