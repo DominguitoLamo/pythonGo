@@ -10,6 +10,7 @@ import (
 type Interpreter struct {
 	stack []pyType.HiObject;
 	consts []pyType.HiObject;
+	loopStack []Block;
 }
 
 func (inter *Interpreter) Run(codes code.CodeObject) {
@@ -18,6 +19,9 @@ func (inter *Interpreter) Run(codes code.CodeObject) {
 
 	inter.stack = make([]pyType.HiObject, 0)
 	inter.consts = codes.Consts
+	inter.loopStack = make([]Block, 0)
+	names := codes.Names
+	locals := make(map[pyType.HiObject] pyType.HiObject)
 
 	for (pc < codeLength) {
 		opCode := int(codes.ByteCodes.Value[pc])
@@ -35,6 +39,16 @@ func (inter *Interpreter) Run(codes code.CodeObject) {
 		switch (opCode) {
 		case code.LOAD_CONST:
 			inter.pushStack(inter.consts[opArg])
+		case code.LOAD_NAME:
+			v := names[opArg]
+			w := locals[v]
+			_, ok := w.(pyType.HiNil)
+			if (!ok) {
+				inter.pushStack(w)
+			}
+		case code.STORE_NAME:
+			v := names[opArg]
+			locals[v] = inter.popStack()
 		case code.PRINT_ITEM:
 			v := inter.popStack()
 			v.Print()
@@ -75,6 +89,23 @@ func (inter *Interpreter) Run(codes code.CodeObject) {
 			pc += opArg
 		case code.JUMP_ABSOLUTE:
 			pc = opArg
+		case code.SETUP_LOOP:
+			inter.pushLoop(Block{
+				BType: opCode,
+				Target: pc + opArg,
+				Level: inter.getStackLevel(),
+			})
+		case code.POP_BLOCK:
+			b := inter.popLoop()
+			for (inter.getStackLevel() > b.Level) {
+				inter.popStack()
+			}
+		case code.BREAK_LOOP:
+			b := inter.popLoop()
+			for (inter.getStackLevel() > b.Level) {
+				inter.popStack()
+			}
+			pc = b.Target
 		default:
 			fmt.Printf("Error: Unrecognized byte code %d\n", opCode)
 		}
@@ -90,4 +121,19 @@ func (inter *Interpreter) popStack() pyType.HiObject {
 
 func (inter *Interpreter) pushStack(obj pyType.HiObject) {
 	inter.stack = append(inter.stack, obj)
+}
+
+func (inter *Interpreter) popLoop() Block {
+	length := len(inter.loopStack)
+	result := inter.loopStack[length - 1]
+	inter.loopStack = inter.loopStack[:length - 1]
+	return result
+}
+
+func (inter *Interpreter) pushLoop(b Block) {
+	inter.loopStack = append(inter.loopStack, b)
+}
+
+func (inter *Interpreter) getStackLevel() int {
+	return len(inter.stack)
 }

@@ -4,16 +4,21 @@ const BINARY_ADD = 23
 
 const PRINT_ITEM = 71
 const PRINT_NEWLINE = 72
+const BREAK_LOOP = 80;
 const RETURN_VALUE = 83
+const POP_BLOCK = 87;
 
 const HAVE_ARGUMENT = 90
+const STORE_NAME = 90;
 
 const LOAD_CONST = 100
+const LOAD_NAME = 101
 
 const COMPARE_OP = 107
 const JUMP_FORWARD = 110
 const JUMP_ABSOLUTE = 113
 const POP_JUMP_IF_FALSE = 114
+const SETUP_LOOP = 120;
 
 const (
 	COMPARE_LESS = iota
