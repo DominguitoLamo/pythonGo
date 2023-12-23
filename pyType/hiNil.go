@@ -16,6 +16,22 @@ func (h HiNil) Add(x HiObject) HiObject {
 	panic("Nil isn't for calculation!")
 }
 
+func (h HiNil) Sub(x HiObject) HiObject {
+	panic("String is not for calculation!")
+}
+
+func (h HiNil) Mul(x HiObject) HiObject {
+	panic("String is not for calculation!")
+}
+
+func (h HiNil) Div(x HiObject) HiObject {
+	panic("String is not for calculation!")
+}
+
+func (h HiNil) Mod(x HiObject) HiObject {
+	panic("String is not for calculation!")
+}
+
 func (h HiNil) Greater(x HiObject) HiObject {
 	panic("Comparison is not allowed!")
 }

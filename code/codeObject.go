@@ -31,6 +31,22 @@ func (h CodeObject) Add(x pyType.HiObject) pyType.HiObject {
 	return nil
 }
 
+func (h CodeObject) Sub(x pyType.HiObject) pyType.HiObject {
+	return nil
+}
+
+func (h CodeObject) Mul(x pyType.HiObject) pyType.HiObject {
+	return nil
+}
+
+func (h CodeObject) Div(x pyType.HiObject) pyType.HiObject {
+	return nil
+}
+
+func (h CodeObject) Mod(x pyType.HiObject) pyType.HiObject {
+	return nil
+}
+
 func (h CodeObject) Greater(x pyType.HiObject) pyType.HiObject {
 	return pyType.HiFalse()
 }

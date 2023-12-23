@@ -31,6 +31,22 @@ func (h HiString) Add(x HiObject) HiObject {
 	}
 }
 
+func (h HiString) Sub(x HiObject) HiObject {
+	panic("String is not for calculation!")
+}
+
+func (h HiString) Mul(x HiObject) HiObject {
+	panic("String is not for calculation!")
+}
+
+func (h HiString) Div(x HiObject) HiObject {
+	panic("String is not for calculation!")
+}
+
+func (h HiString) Mod(x HiObject) HiObject {
+	panic("String is not for calculation!")
+}
+
 func (h HiString) Greater(x HiObject) HiObject {
 	switch v:= x.(type) {
 	case HiString:

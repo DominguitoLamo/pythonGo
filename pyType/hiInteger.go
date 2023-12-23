@@ -31,6 +31,58 @@ func (h HiInterger) Add(x HiObject) HiObject {
 	}
 }
 
+func (h HiInterger) Sub(x HiObject) HiObject {
+	switch v := x.(type) {
+	case HiInterger:
+		result := HiObject(CreateInteger(h.value - v.value))
+		return result
+	case HiString:
+		result := HiObject(CreateHiString(fmt.Sprintf("%d%s", h.value, v.Value)))
+		return result
+	default:
+		panic("No suitable type!!")
+	}
+}
+
+func (h HiInterger) Mul(x HiObject) HiObject {
+	switch v := x.(type) {
+	case HiInterger:
+		result := HiObject(CreateInteger(h.value * v.value))
+		return result
+	case HiString:
+		result := HiObject(CreateHiString(fmt.Sprintf("%d%s", h.value, v.Value)))
+		return result
+	default:
+		panic("No suitable type!!")
+	}
+}
+
+func (h HiInterger) Div(x HiObject) HiObject {
+	switch v := x.(type) {
+	case HiInterger:
+		result := HiObject(CreateInteger(h.value / v.value))
+		return result
+	case HiString:
+		result := HiObject(CreateHiString(fmt.Sprintf("%d%s", h.value, v.Value)))
+		return result
+	default:
+		panic("No suitable type!!")
+	}
+}
+
+func (h HiInterger) Mod(x HiObject) HiObject {
+	switch v := x.(type) {
+	case HiInterger:
+		result := HiObject(CreateInteger(h.value % v.value))
+		return result
+	case HiString:
+		result := HiObject(CreateHiString(fmt.Sprintf("%d%s", h.value, v.Value)))
+		return result
+	default:
+		panic("No suitable type!!")
+	}
+}
+
 func (h HiInterger) Greater(x HiObject) HiObject {
 	switch v:= x.(type) {
 	case HiInterger:
